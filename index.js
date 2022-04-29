@@ -10,6 +10,11 @@ app.get('/', (req, res) => {
     res.send('comfort furniture server is running');
 })
 
+
+app.get('/product', (req, res) => {
+    res.send("the product is found her and to deploy this ")
+})
+
 app.listen(port, () => {
     console.log('server is running');
 })
