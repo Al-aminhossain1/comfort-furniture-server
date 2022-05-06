@@ -6,7 +6,7 @@ const cors = require('cors');
 require('dotenv').config()
 // use middleware
 app.use(cors());
-app.use(express());
+app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.s8o1a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
@@ -20,11 +20,11 @@ async function run() {
         const productCollection = client.db('warehouse').collection('product');
 
         // Post Items
-        app.post('/product/new', (req, res) => {
+        app.post('/product/new', async (req, res) => {
             const product = req.body;
-            // const result = await productCollection.insertOne(product)
+            const result = await productCollection.insertOne(product)
             console.log('adding new product', product);
-            res.send({ "product added success": "success" })
+            res.send(result)
 
         })
 
@@ -47,13 +47,13 @@ async function run() {
 
         app.put('/product/:id', async (req, res) => {
             const id = req.params.id;
-            const deliverdProduct = req.body;
-            console.log('product delivery successd', deliverdProduct);
+            const deliveredProduct = req.body;
+            console.log('product delivery success', deliveredProduct);
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
-                    quantity: deliverdProduct
+                    deliveredProduct
                 },
             };
             const result = await productCollection.updateOne(filter, updateDoc, options);
