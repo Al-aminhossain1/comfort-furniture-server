@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
+const { ObjectID } = require('bson');
 require('dotenv').config()
 // use middleware
 app.use(cors());
@@ -44,7 +45,7 @@ async function run() {
             res.send(products);
         })
 
-
+        // Update product
         app.put('/product/:id', async (req, res) => {
             const id = req.params.id;
             const deliveredProduct = req.body;
@@ -58,6 +59,14 @@ async function run() {
             };
             const result = await productCollection.updateOne(filter, updateDoc, options);
 
+            res.send(result)
+        })
+
+        // Delete product
+        app.delete('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectID(id) };
+            const result = await productCollection.deleteOne(query)
             res.send(result)
         })
 
